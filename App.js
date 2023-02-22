@@ -1,33 +1,21 @@
-import { useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import TaskList from './src/components/TaskList';
-
-const Stack = createNativeStackNavigator();
+import { useState, useEffect } from "react";
+import { SafeAreaView, Text } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import AddTask from "./src/components/AddTask";
+import TaskList from "./src/components/TaskList";
 
 export default function App() {
-  const [tasks, setTasks ] = useState();
-
+  const [tasks, setTasks] = useState();
+  const [taskCount, setTaskCount] = useState(0);
+  useEffect(() => {
+    setTaskCount(tasks?.length || 0)
+  }, [tasks])
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <Stack.Navigator initialRouteName='Home'>
-        <Stack.Screen name="Home"
-        component={TaskList}
-        tasks={tasks}
-        setTasks={setTasks} />
-      </Stack.Navigator>
-    </NavigationContainer>  
+      <SafeAreaView style={{ backgroundColor: "#102030" }}>
+        <StatusBar style="light" />
+        <Text style={{ color: 'white', textAlign: 'center'}}>{taskCount} Tasks</Text>
+        <AddTask setTasks={setTasks} />
+        <TaskList tasks={tasks} setTasks={setTasks} />
+      </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
